@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Gerador de Keys PIETRO</title>
+    <style>
+        body { background: #000; color: #f1c40f; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .admin-box { width: 400px; background: #111; border: 2px solid #f1c40f; padding: 20px; border-radius: 10px; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
+        button { background: #f1c40f; color: #000; font-weight: bold; cursor: pointer; border: none; }
+        .key-list { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="admin-box">
+        <h2>🔑 Gerador de Keys</h2>
+        <input type="text" id="adminUser" placeholder="Nome do Usuário">
+        <select id="keyTime">
+            <option value="1">1 Dia</option>
+            <option value="7">7 Dias</option>
+            <option value="30">30 Dias</option>
+            <option value="999">Ilimitado (Vitalício)</option>
+        </select>
+        <button onclick="generateKey()">GERAR KEY PIETRO-</button>
+        <div class="key-list" id="keyList"><strong>Keys Ativas:</strong></div>
+    </div>
+
+    <script>
+        function generateKey() {
+            const user = document.getElementById('adminUser').value || "Anonimo";
+            const time = document.getElementById('keyTime').value;
+            const randomNums = Math.floor(10000 + Math.random() * 90000);
+            const newKey = `PIETRO-${randomNums}`;
+            
+            const keyData = { key: newKey, user: user, days: time };
+            let keys = JSON.parse(localStorage.getItem('active_keys')) || [];
+            keys.push(keyData);
+            localStorage.setItem('active_keys', JSON.stringify(keys));
+
+            alert(`Key Gerada para ${user}:\n${newKey}`);
+            location.reload();
+        }
+
+        // Mostrar keys geradas
+        const saved = JSON.parse(localStorage.getItem('active_keys')) || [];
+        saved.forEach(k => {
+            document.getElementById('keyList').innerHTML += `<p>${k.user}: ${k.key} (${k.days}d)</p>`;
+        });
+    </script>
+</body>
+</html>
